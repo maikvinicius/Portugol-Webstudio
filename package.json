@@ -20,7 +20,7 @@
     "url": "https://github.com/dgadelha/Portugol-Webstudio/issues"
   },
   "homepage": "https://github.com/dgadelha/Portugol-Webstudio#readme",
-  "packageManager": "^npm@11.0.0",
+  "packageManager": "npm@11.11.0+sha512.f36811c4aae1fde639527368ae44c571d050006a608d67a191f195a801a52637a312d259186254aa3a3799b05335b7390539cf28656d18f0591a1125ba35f973",
   "workspaces": [
     "packages/*"
   ],
@@ -39,19 +39,22 @@
     "postinstall": "patch-package"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.1",
-    "angular-eslint": "^20.6.0",
-    "eslint": "^9.39.1",
+    "@eslint/js": "^9.39.3",
+    "angular-eslint": "^21.2.0",
+    "eslint": "^9.39.3",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.4",
-    "eslint-plugin-unicorn": "^62.0.0",
-    "lerna": "^9.0.0",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-unicorn": "^63.0.0",
+    "lerna": "^9.0.5",
     "patch-package": "^8.0.1",
-    "sherif": "^1.8.0",
+    "sherif": "^1.10.0",
     "typescript": "~5.9.3",
-    "typescript-eslint": "^8.46.4"
+    "typescript-eslint": "^8.56.1"
   },
   "overrides": {
+    "@nx/devkit": {
+      "minimatch": "^10.2.3"
+    },
     "tmp": "^0.2.5"
   }
 }

@@ -1,9 +1,9 @@
 diff --git a/node_modules/iconv-lite/lib/index.js b/node_modules/iconv-lite/lib/index.js
-index be3e9f9..1c39aff 100644
+index bd5d6bc..96e54c4 100644
 --- a/node_modules/iconv-lite/lib/index.js
 +++ b/node_modules/iconv-lite/lib/index.js
-@@ -161,21 +161,6 @@ iconv.enableStreamingAPI = function enableStreamingAPI (streamModule) {
-   iconv.supportsStreams = true
+@@ -160,21 +160,6 @@ module.exports.enableStreamingAPI = function enableStreamingAPI (streamModule) {
+   module.exports.supportsStreams = true
  }
  
 -// Enable Streaming API automatically if 'stream' module is available and non-empty (the majority of environments).
@@ -13,10 +13,10 @@ index be3e9f9..1c39aff 100644
 -} catch (e) {}
 -
 -if (streamModule && streamModule.Transform) {
--  iconv.enableStreamingAPI(streamModule)
+-  module.exports.enableStreamingAPI(streamModule)
 -} else {
 -  // In rare cases where 'stream' module is not available by default, throw a helpful exception.
--  iconv.encodeStream = iconv.decodeStream = function () {
+-  module.exports.encodeStream = module.exports.decodeStream = function () {
 -    throw new Error("iconv-lite Streaming API is not enabled. Use iconv.enableStreamingAPI(require('stream')); to enable it.")
 -  }
 -}

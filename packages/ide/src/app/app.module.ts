@@ -1,5 +1,12 @@
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
-import { ErrorHandler, inject, isDevMode, NgModule, provideAppInitializer } from "@angular/core";
+import {
+  ErrorHandler,
+  inject,
+  isDevMode,
+  NgModule,
+  provideAppInitializer,
+  provideZoneChangeDetection,
+} from "@angular/core";
 import { initializeApp, provideFirebaseApp } from "@angular/fire/app";
 import { getStorage, provideStorage } from "@angular/fire/storage";
 import { FormsModule } from "@angular/forms";
@@ -65,6 +72,7 @@ import { ThemeService } from "./theme.service";
   ],
   declarations: [AppComponent, TabEditorComponent, TabStartComponent, TabHelpComponent, DialogOpenExampleComponent],
   providers: [
+    provideZoneChangeDetection(),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideStorage(() => getStorage()),
     provideHttpClient(withInterceptorsFromDi()),
