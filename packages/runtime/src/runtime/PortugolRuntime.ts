@@ -346,6 +346,34 @@ class PortugolRuntime {
     }
   }
 
+  checkArraySize(arr, expectedLength, name) {
+    const items = arr.value;
+
+    if (!Array.isArray(items)) return;
+
+    if (expectedLength > 0 && items.length > expectedLength) {
+      throw new Error("Você está atribuindo um conjunto de valores maior que o tamanho do vetor (" + name + ")");
+    }
+  }
+
+  checkMatrizSize(matriz, expectedRows, expectedCols, name) {
+    const rows = matriz.value;
+
+    if (!Array.isArray(rows)) return;
+
+    if (expectedRows > 0 && rows.length > expectedRows) {
+      throw new Error("Você está atribuindo um conjunto de valores maior que o tamanho da matriz (" + name + ")");
+    }
+
+    if (expectedCols > 0) {
+      for (const row of rows) {
+        if (row && Array.isArray(row.value) && row.value.length > expectedCols) {
+          throw new Error("Você está atribuindo um conjunto de valores maior que o tamanho da matriz (" + name + ")");
+        }
+      }
+    }
+  }
+
   checkParams(args, params) {
     if (args.length != params.length) {
       throw new Error("Número de parâmetros inválido! A função '" + this.currentFunction + "' espera " + params.length + " parâmetro" + (params.length > 1 ? "s" : "") + ", mas fo" + (args.length > 1 ? "ram" : "i") + " passado" + (args.length > 1 ? "s" : "") + " " + args.length + ".");
