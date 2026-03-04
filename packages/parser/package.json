@@ -36,9 +36,9 @@
   },
   "dependencies": {
     "@portugol-webstudio/antlr": "*",
-    "antlr4ng": "^3.0.14"
+    "antlr4ng": "^3.0.16"
   },
   "devDependencies": {
-    "typescript": "~5.7.3"
+    "typescript": "~5.9.3"
   }
 }

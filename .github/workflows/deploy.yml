@@ -1,21 +1,21 @@
 name: Build and Deploy (Production)
+permissions:
+  contents: write
 on:
   push:
     branches:
       - main
-permissions:
-  contents: write
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js 📦
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: lts/*
 
       - name: Install dependencies 🔧
         run: npm ci --include=dev
@@ -38,7 +38,7 @@ jobs:
           folder: packages/ide/dist/browser
 
       - name: Create Sentry release 📦
-        uses: getsentry/action-release@v1
+        uses: getsentry/action-release@v3
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ vars.SENTRY_ORG }}
@@ -46,3 +46,4 @@ jobs:
         with:
           environment: production
           sourcemaps: packages/ide/dist/browser
+          inject: false

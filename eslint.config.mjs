@@ -2,21 +2,27 @@ import eslint from "@eslint/js";
 import angular from "angular-eslint";
 import prettier from "eslint-plugin-prettier/recommended";
 import unicorn from "eslint-plugin-unicorn";
+import { defineConfig } from "eslint/config";
 import tseslint from "typescript-eslint";
 
-export default tseslint.config(
+export default defineConfig(
   eslint.configs.recommended,
-  ...angular.configs.tsRecommended,
-  // @ts-ignore
-  unicorn.configs["flat/all"],
+  unicorn.configs.all,
   prettier,
   {
     files: ["**/*.html"],
-    extends: [...angular.configs.templateRecommended, ...angular.configs.templateAccessibility],
+    // @ts-expect-error - Configuração válida, tipos desatualizados
+    extends: [...angular.configs.templateAll, ...angular.configs.templateAccessibility],
+    rules: {
+      "@angular-eslint/template/i18n": "off",
+      "@angular-eslint/template/cyclomatic-complexity": "warn",
+      "@angular-eslint/template/no-call-expression": "off",
+    },
   },
   {
     files: ["**/*.ts"],
-    extends: [...tseslint.configs.strictTypeChecked],
+    extends: [...tseslint.configs.strictTypeChecked, ...angular.configs.tsAll],
+    processor: angular.processInlineTemplates,
     languageOptions: {
       parserOptions: {
         project: true,
@@ -24,6 +30,8 @@ export default tseslint.config(
       },
     },
     rules: {
+      "@angular-eslint/prefer-on-push-component-change-detection": "off",
+      "@angular-eslint/prefer-signals": "warn",
       "@typescript-eslint/ban-ts-comment": "off",
       "@typescript-eslint/consistent-type-imports": "off",
       "@typescript-eslint/naming-convention": "off",
@@ -101,6 +109,7 @@ export default tseslint.config(
       "unicorn/prefer-export-from": "off",
       "unicorn/prefer-global-this": "off",
       "unicorn/prefer-spread": "off",
+      "unicorn/prefer-string-raw": "off",
       "unicorn/prefer-ternary": "off",
       "unicorn/prefer-top-level-await": "off",
       "unicorn/prevent-abbreviations": "off",

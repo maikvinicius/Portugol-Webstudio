@@ -1,5 +1,12 @@
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
-import { ErrorHandler, NgModule, inject, isDevMode, provideAppInitializer } from "@angular/core";
+import {
+  ErrorHandler,
+  inject,
+  isDevMode,
+  NgModule,
+  provideAppInitializer,
+  provideZoneChangeDetection,
+} from "@angular/core";
 import { initializeApp, provideFirebaseApp } from "@angular/fire/app";
 import { getStorage, provideStorage } from "@angular/fire/storage";
 import { FormsModule } from "@angular/forms";
@@ -14,7 +21,6 @@ import { MatTabsModule } from "@angular/material/tabs";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatTreeModule } from "@angular/material/tree";
 import { BrowserModule } from "@angular/platform-browser";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { ServiceWorkerModule } from "@angular/service-worker";
 import { MonacoEditorModule } from "@materia-ui/ngx-monaco-editor";
 import { provideHotToastConfig } from "@ngxpert/hot-toast";
@@ -24,9 +30,10 @@ import { AngularSvgIconModule } from "angular-svg-icon";
 import { KeyboardShortcutsModule } from "ng-keyboard-shortcuts";
 import { NgxGoogleAnalyticsModule } from "ngx-google-analytics";
 import { MarkdownModule } from "ngx-markdown";
-import { provideNgxWebstorage, withLocalStorage, withNgxWebstorageConfig } from "ngx-webstorage";
+import { provideNgxWebstorage, withNgxWebstorageConfig } from "ngx-webstorage";
 
 import { environment } from "../environments/environment";
+import { withNgxLocalStorageFallback } from "../helpers/local-storage";
 import { AppComponent } from "./app.component";
 import { DialogOpenExampleComponent } from "./dialog-open-example/dialog-open-example.component";
 import { MonacoService } from "./monaco.service";
@@ -37,10 +44,8 @@ import { TabStartComponent } from "./tab-start/tab-start.component";
 import { ThemeService } from "./theme.service";
 
 @NgModule({
-  declarations: [AppComponent, TabEditorComponent, TabStartComponent, TabHelpComponent, DialogOpenExampleComponent],
   imports: [
     BrowserModule,
-    BrowserAnimationsModule,
     FormsModule,
     AngularSplitModule,
     MonacoEditorModule,
@@ -65,14 +70,16 @@ import { ThemeService } from "./theme.service";
       registrationStrategy: "registerWhenStable:30000",
     }),
   ],
+  declarations: [AppComponent, TabEditorComponent, TabStartComponent, TabHelpComponent, DialogOpenExampleComponent],
   providers: [
+    provideZoneChangeDetection(),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideStorage(() => getStorage()),
     provideHttpClient(withInterceptorsFromDi()),
     provideHotToastConfig({
       position: "bottom-right",
     }),
-    provideNgxWebstorage(withNgxWebstorageConfig({ prefix: "pws", separator: ":" }), withLocalStorage()),
+    provideNgxWebstorage(withNgxWebstorageConfig({ prefix: "pws", separator: ":" }), withNgxLocalStorageFallback()),
     provideAppInitializer(() => {
       inject(MonacoService);
       inject(ThemeService);

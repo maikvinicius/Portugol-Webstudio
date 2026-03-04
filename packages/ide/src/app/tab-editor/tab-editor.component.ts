@@ -1,15 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  TemplateRef,
-  ViewChild,
-  inject,
-} from "@angular/core";
+import { Component, ElementRef, Input, OnDestroy, OnInit, TemplateRef, inject, output, viewChild } from "@angular/core";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import type { PortugolCodeError } from "@portugol-webstudio/antlr";
@@ -30,11 +19,11 @@ import { ThemeService } from "../theme.service";
 import { WorkerService } from "../worker.service";
 
 @Component({
+  selector: "app-tab-editor",
   // eslint-disable-next-line @angular-eslint/prefer-standalone
   standalone: false,
-  selector: "app-tab-editor",
   templateUrl: "./tab-editor.component.html",
-  styleUrls: ["./tab-editor.component.scss"],
+  styleUrl: "./tab-editor.component.scss",
 })
 export class TabEditorComponent implements OnInit, OnDestroy {
   private _code$?: Subscription;
@@ -58,12 +47,12 @@ export class TabEditorComponent implements OnInit, OnDestroy {
   @Input()
   code?: string;
 
-  @Output() titleChange = new EventEmitter<string>();
-  @Output() help = new EventEmitter();
-  @Output() settings = new EventEmitter();
+  readonly titleChange = output<string>();
+  readonly help = output();
+  readonly settings = output();
 
-  @ViewChild("fileInput")
-  fileInput!: ElementRef<HTMLInputElement>;
+  readonly shareSnackTemplate = viewChild.required<TemplateRef<{ data: { url: string } }>>("shareSnackTemplate");
+  readonly fileInput = viewChild.required<ElementRef<HTMLInputElement>>("fileInput");
 
   transpiling = false;
   executor = new PortugolExecutor(PortugolWebWorkersRunner);
@@ -118,7 +107,7 @@ export class TabEditorComponent implements OnInit, OnDestroy {
       key: "ctrl + o",
       preventDefault: true,
       command: () => {
-        this.fileInput.nativeElement.click();
+        this.fileInput().nativeElement.click();
       },
     },
     {
@@ -127,9 +116,6 @@ export class TabEditorComponent implements OnInit, OnDestroy {
       command: this.runCode.bind(this),
     },
   ];
-
-  @ViewChild("shareSnackTemplate", { read: TemplateRef })
-  shareSnackTemplate!: TemplateRef<{ data: { url: string } }>;
 
   ngOnInit() {
     this.code ||= `programa {\n  funcao inicio() {\n    \n  }\n}\n`;
@@ -307,13 +293,13 @@ export class TabEditorComponent implements OnInit, OnDestroy {
 
     this.title = file.name;
     this.titleChange.emit(file.name);
-    this.code = contents?.toString();
+    this.code = contents;
   }
 
   private prepareFile(as: "text" | "binary", compat = false) {
     const blob = (() => {
       if (compat) {
-        return new Blob([encode(this.code ?? "", "ISO-8859-1")], {
+        return new Blob([Uint8Array.from(encode(this.code ?? "", "ISO-8859-1"))], {
           type: `${as === "binary" ? "application/octet-stream" : "text/plain"}; charset=ISO-8859-1`,
         });
       }
@@ -455,7 +441,7 @@ export class TabEditorComponent implements OnInit, OnDestroy {
       keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyO],
       label: "Abrir arquivo",
       run: () => {
-        this.fileInput.nativeElement.click();
+        this.fileInput().nativeElement.click();
       },
     });
 
@@ -508,7 +494,7 @@ export class TabEditorComponent implements OnInit, OnDestroy {
     const shareUrl = await this.shareService.share(this.code);
 
     if (shareUrl) {
-      this.snack.openFromTemplate(this.shareSnackTemplate, {
+      this.snack.openFromTemplate(this.shareSnackTemplate(), {
         data: {
           url: shareUrl,
         },

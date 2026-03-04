@@ -1,16 +1,16 @@
-import { Component, Inject, Optional } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { HotToastRef } from "@ngxpert/hot-toast";
 
 @Component({
   selector: "app-new-version-available",
-  templateUrl: "./new-version-available.component.html",
-  styleUrls: ["./new-version-available.component.scss"],
-  standalone: true,
   imports: [MatButtonModule],
+  standalone: true,
+  templateUrl: "./new-version-available.component.html",
+  styleUrl: "./new-version-available.component.scss",
 })
 export class NewVersionAvailableComponent {
-  constructor(@Optional() @Inject(HotToastRef) public toastRef?: HotToastRef<any>) {}
+  public toastRef = inject(HotToastRef, { optional: true });
 
   onReload() {
     if (

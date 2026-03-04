@@ -1,5 +1,5 @@
 import { DragDropModule } from "@angular/cdk/drag-drop";
-import { Component, ElementRef, Input, ViewChild } from "@angular/core";
+import { Component, ElementRef, inject, Input, viewChild } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
 import { AngularSvgIconModule } from "angular-svg-icon";
@@ -8,25 +8,25 @@ import { IGraphicsRendererComponent } from "../../renderer";
 @Component({
   selector: "app-dialog-renderer",
   imports: [MatButtonModule, MatDialogClose, MatDialogContent, MatDialogTitle, AngularSvgIconModule, DragDropModule],
+  standalone: true,
   templateUrl: "./dialog-renderer.component.html",
   styleUrl: "./dialog-renderer.component.scss",
-  standalone: true,
 })
 export class DialogRendererComponent implements IGraphicsRendererComponent {
   @Input()
   title = "";
 
-  @ViewChild("canvas")
-  canvas?: ElementRef<HTMLCanvasElement>;
-
-  constructor(public dialogRef: MatDialogRef<DialogRendererComponent>) {}
+  private dialogRef = inject(MatDialogRef<DialogRendererComponent>);
+  readonly canvas = viewChild<ElementRef<HTMLCanvasElement>>("canvas");
 
   getCanvas(): Promise<OffscreenCanvas> {
     return new Promise(resolve => {
       const interval = setInterval(() => {
-        if (this.canvas?.nativeElement) {
+        const canvas = this.canvas()?.nativeElement;
+
+        if (canvas?.transferControlToOffscreen) {
           clearInterval(interval);
-          resolve(this.canvas.nativeElement.transferControlToOffscreen());
+          resolve(canvas.transferControlToOffscreen());
         }
       }, 100);
     });
