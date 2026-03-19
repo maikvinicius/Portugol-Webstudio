@@ -924,7 +924,7 @@ export class PortugolJs extends AbstractParseTreeVisitor<string> implements Port
           const cols = mtrx.colunaMatriz();
 
           if (rows || cols) {
-            sb.append(this.PAD(), `runtime.checkMatrizSize(`);
+            sb.append(this.PAD(), `runtime.checkMatrixSize(`);
             sb.append(`${scopeStr}.variables["${mtrx.ID().getText()}"], `);
             sb.append(rows ? `${this.visit(rows.tamanhoArray().expressao())?.trim()}.value` : `0`);
             sb.append(`, `);
