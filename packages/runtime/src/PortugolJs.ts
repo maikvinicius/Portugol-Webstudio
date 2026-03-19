@@ -929,8 +929,7 @@ export class PortugolJs extends AbstractParseTreeVisitor<string> implements Port
             sb.append(rows ? `${this.visit(rows.tamanhoArray().expressao())?.trim()}.value` : `0`);
             sb.append(`, `);
             sb.append(cols ? `${this.visit(cols.tamanhoArray().expressao())?.trim()}.value` : `0`);
-            sb.append(`, "${mtrx.ID().getText()}"`)
-            sb.append(`)`, `\n`);
+            sb.append(`, "${mtrx.ID().getText()}"`);            sb.append(`)`, `\n`);
           }
         } else {
           sb.append(this.PAD(), `${scopeStr}.variables["${mtrx.ID().getText()}"] = new PortugolVar(`);
